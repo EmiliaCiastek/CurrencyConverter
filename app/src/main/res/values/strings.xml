@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CurrencyConverter</string>
+
+    <string name="currency_shortcut_placeholder">USD</string>
+    <string name="currency_name_placeholder">US Dollar</string>
+    <string name="currency_value_placeholder">1183.06</string>
+
+    <string name="rates_header">Rates</string>
 </resources>
