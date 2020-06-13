@@ -7,6 +7,8 @@ interface CurrencyConverterMVP {
         fun attach(view: View)
 
         fun detach()
+
+        fun updateCurrentActiveCurrency(currencyShortcut: String)
     }
 
     interface View {

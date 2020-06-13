@@ -9,7 +9,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class CurrencyPresenter @Inject constructor(
+class CurrencyPresenter @Inject constructor (
     private val currencyInteractor: CurrenciesInteractor,
     @BackgroundScheduler private val backgroundScheduler: Scheduler,
     @UiScheduler private val uiScheduler: Scheduler
@@ -17,6 +17,7 @@ class CurrencyPresenter @Inject constructor(
 
     private var view: View? = null
     private val disposable = CompositeDisposable()
+    private var currentActiveCurrency = "EUR"
 
     override fun attach(view: View) {
         this.view = view
@@ -25,6 +26,7 @@ class CurrencyPresenter @Inject constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(uiScheduler)
             .map { it.map { currency -> currency.mapToCurrencyView() } }
+            .map { it.sortedByDescending { currency -> currency.isActive } }
             .subscribe({
                 view?.showCurrencies(it)
             }, {
@@ -35,12 +37,17 @@ class CurrencyPresenter @Inject constructor(
             }
     }
 
+    override fun updateCurrentActiveCurrency(currencyShortcut: String) {
+        currentActiveCurrency = currencyShortcut
+    }
+
     override fun detach() {
         disposable.clear()
         view = null
     }
 
     private fun Currency.mapToCurrencyView(): CurrencyView =
-        CurrencyView(shortcut = shortcut, fullName = fullName, value = rate)
+        CurrencyView(shortcut = shortcut, fullName = fullName, value = rate).apply {
+            isActive = shortcut == currentActiveCurrency
+        }
 }
-

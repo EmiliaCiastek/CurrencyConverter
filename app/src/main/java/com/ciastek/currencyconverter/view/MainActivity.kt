@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), CurrencyConverterMVP.View {
 
         injectDependencies()
 
-        currenciesAdapter = CurrenciesAdapter()
+        currenciesAdapter = CurrenciesAdapter{currenciesPresenter.updateCurrentActiveCurrency(it)}
         currenciesList.apply {
             adapter = currenciesAdapter
             layoutManager = LinearLayoutManager(context)
