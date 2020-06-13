@@ -6,4 +6,5 @@
     <string name="currency_value_placeholder">1183.06</string>
 
     <string name="rates_header">Rates</string>
+    <string name="default_error_message">Something went wrong :(</string>
 </resources>

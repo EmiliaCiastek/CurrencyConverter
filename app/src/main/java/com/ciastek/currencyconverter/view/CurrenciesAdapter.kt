@@ -7,7 +7,7 @@ import com.ciastek.currencyconverter.R
 
 class CurrenciesAdapter : RecyclerView.Adapter<CurrencyViewHolder>() {
 
-    private var currencies: List<Currency> = emptyList()
+    private var currencies: List<CurrencyView> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder =
         CurrencyViewHolder(
@@ -21,7 +21,7 @@ class CurrenciesAdapter : RecyclerView.Adapter<CurrencyViewHolder>() {
         holder.bind(currencies[position])
     }
 
-    fun setCurrencies(currencies: List<Currency>) {
+    fun setCurrencies(currencies: List<CurrencyView>) {
         this.currencies = currencies
         notifyDataSetChanged()
     }

@@ -11,6 +11,8 @@ interface CurrencyConverterMVP {
 
     interface View {
 
-        fun showCurrencies(currencies: List<Currency>)
+        fun showCurrencies(currencies: List<CurrencyView>)
+
+        fun handleError(it: Throwable)
     }
 }

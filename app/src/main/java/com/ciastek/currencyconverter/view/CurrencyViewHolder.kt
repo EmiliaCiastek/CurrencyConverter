@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.currency_item_layout.view.*
 
 class CurrencyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(currency: Currency) {
+    fun bind(currency: CurrencyView) {
         itemView.currency_shortcut.text = currency.shortcut
         itemView.currency_name.text = currency.fullName
         itemView.currency_value.setText(currency.value.toString())
