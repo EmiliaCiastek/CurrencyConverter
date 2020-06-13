@@ -2,16 +2,15 @@ package com.ciastek.currencyconverter.view
 
 import com.ciastek.currencyconverter.di.RxModule.BackgroundScheduler
 import com.ciastek.currencyconverter.di.RxModule.UiScheduler
-import com.ciastek.currencyconverter.repository.CurrencyService
-import com.ciastek.currencyconverter.repository.ExchangeRates
+import com.ciastek.currencyconverter.repository.CurrenciesInteractor
+import com.ciastek.currencyconverter.repository.Currency
 import com.ciastek.currencyconverter.view.CurrencyConverterMVP.View
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
-import java.math.BigDecimal
 import javax.inject.Inject
 
 class CurrencyPresenter @Inject constructor(
-    private val currencyService: CurrencyService,
+    private val currencyInteractor: CurrenciesInteractor,
     @BackgroundScheduler private val backgroundScheduler: Scheduler,
     @UiScheduler private val uiScheduler: Scheduler
 ) : CurrencyConverterMVP.Presenter {
@@ -22,14 +21,15 @@ class CurrencyPresenter @Inject constructor(
     override fun attach(view: View) {
         this.view = view
 
-        currencyService.getCurrentExchangeRates()
+        currencyInteractor.getExchangeRates()
             .subscribeOn(backgroundScheduler)
             .observeOn(uiScheduler)
-            .subscribe( {
-                view?.showCurrencies(it.mapToCurrencyView())
+            .map { it.map { currency -> currency.mapToCurrencyView() } }
+            .subscribe({
+                view?.showCurrencies(it)
             }, {
                 view?.handleError(it)
-            } )
+            })
             .apply {
                 disposable.add(this)
             }
@@ -40,32 +40,7 @@ class CurrencyPresenter @Inject constructor(
         view = null
     }
 
-    private fun ExchangeRates.mapToCurrencyView(): List<CurrencyView> {
-        val currencies = mutableListOf(
-            CurrencyView(
-                shortcut = baseCurrency,
-                fullName = currenciesNames[baseCurrency] ?: baseCurrency,
-                value = BigDecimal.ONE
-            )
-        )
-
-        rates.map {
-            currencies.add(
-                CurrencyView(
-                    shortcut = it.key,
-                    fullName = currenciesNames[it.key] ?: it.key,
-                    value = it.value
-                )
-            )
-        }
-
-        return currencies
-    }
-
-    private val currenciesNames: Map<String, String> = mapOf(
-        "EUR" to "European euro",
-        "BRL" to "Brazilian real",
-        "USD" to "United States dollar"
-    )
+    private fun Currency.mapToCurrencyView(): CurrencyView =
+        CurrencyView(shortcut = shortcut, fullName = fullName, value = rate)
 }
 
