@@ -48,9 +48,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/basic_margin"
         android:ems="4"
+        android:inputType="numberDecimal"
         android:text="@string/currency_value_placeholder"
         android:textAlignment="center"
-        android:inputType="numberDecimal"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
